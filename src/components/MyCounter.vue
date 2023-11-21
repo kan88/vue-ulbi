@@ -3,8 +3,8 @@
     <h2>{{ title }}</h2>
     <h3>Amount likes:{{ likes }}</h3>
     <h3>Amount dislikes:{{ dislikes }}</h3>
-    <button @click="addLike">Like</button>
-    <button v-on:click="addDislike">DisLike</button>
+    <my-button @click="addLike">Like</my-button>
+    <my-button @click="addDislike">DisLike</my-button>
   </section>
 </template>
 

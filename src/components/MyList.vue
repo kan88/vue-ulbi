@@ -1,14 +1,25 @@
 <template>
   <section>
     <h2>My list</h2>
-    <form @submit.prevent>
-      <input v-model="post.title" type="text" placeholder="title" />
-      <input v-model="post.body" type="text" placeholder="body" />
-      <button @click="addPost">New Post</button>
-    </form>
-    <ul v-for="post in posts" :key="post.id">
-      <MyItem :post="post" />
+    <my-button @click="this.show = true">Add new Post</my-button>
+    <my-modal v-model:show="show">
+      <h2>Form new post</h2>
+      <form @submit.prevent>
+        <my-input v-model.trim="post.title" type="text" placeholder="title" />
+        <my-input v-model.trim="post.body" type="text" placeholder="body" />
+        <my-button @click="addPost">New Post</my-button>
+      </form>
+    </my-modal>
+    <ul v-if="posts.length > 0">
+      <h2>My actual posts</h2>
+      <my-item
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+        @removePost="$emit('removePost', post)"
+      />
     </ul>
+    <h2 v-else style="color: red">List is empty</h2>
   </section>
 </template>
 
@@ -19,7 +30,10 @@ export default {
   name: "MyList",
   components: { MyItem },
   props: {
-    posts: Array,
+    posts: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
@@ -27,6 +41,7 @@ export default {
         title: "",
         body: "",
       },
+      show: false,
     };
   },
   methods: {
@@ -36,6 +51,7 @@ export default {
         body: this.post.body,
         title: this.post.title,
       });
+      this.show = !this.show;
       this.post.title = "";
       this.post.body = "";
     },
@@ -59,15 +75,9 @@ form {
   flex-direction: column;
 }
 
-input {
-  padding: 5px;
-  margin-bottom: 10px;
-  min-width: 200px;
-  border: 2px solid rgb(92, 92, 224);
-  border-radius: 3px;
-}
-
-input:hover {
-  border: 2px solid rgb(26, 118, 67);
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

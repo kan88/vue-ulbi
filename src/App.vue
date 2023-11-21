@@ -1,15 +1,15 @@
 <template>
-  <CounterLikeDislike title="My counter" />
-  <MyList :posts="posts" @createPost="createPost" />
+  <my-counter title="My counter" />
+  <my-list :posts="posts" @createPost="createPost" @removePost="deleteItem" />
 </template>
 
 <script>
-import CounterLikeDislike from "./components/MyCounter.vue";
+import MyCounter from "./components/MyCounter.vue";
 import MyList from "./components/MyList.vue";
 export default {
   name: "App",
   components: {
-    CounterLikeDislike,
+    MyCounter,
     MyList,
   },
   data() {
@@ -21,6 +21,14 @@ export default {
     createPost(post) {
       this.posts.push(post);
     },
+    deleteItem(post) {
+      this.posts = this.posts.filter((item) => {
+        return item.id !== post.id;
+      });
+    },
+    async getPosts() {
+      f
+    }
   },
 };
 </script>
@@ -31,14 +39,6 @@ export default {
   padding: 0;
   box-sizing: border-box;
   color: rgb(46, 46, 46);
-}
-button {
-  background-color: rgb(127, 157, 255);
-  border: 0;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  width: 200px;
 }
 
 h2 {
