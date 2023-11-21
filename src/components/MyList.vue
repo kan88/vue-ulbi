@@ -11,7 +11,6 @@
       </form>
     </my-modal>
     <ul v-if="posts.length > 0">
-      <h2>My actual posts</h2>
       <my-item
         v-for="post in posts"
         :key="post.id"
@@ -77,7 +76,14 @@ form {
 
 ul {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  max-width: 800px;
+  gap: 30px;
+  justify-content: center;
+}
+
+button {
+  margin-bottom: 30px;
 }
 </style>

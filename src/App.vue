@@ -1,11 +1,15 @@
 <template>
-  <my-counter title="My counter" />
-  <my-list :posts="posts" @createPost="createPost" @removePost="deleteItem" />
+  <main>
+    <my-counter title="My counter" />
+    <my-list :posts="posts" @createPost="createPost" @removePost="deleteItem" />
+    <h2 v-if="isLoading">Loading...</h2>
+  </main>
 </template>
 
 <script>
 import MyCounter from "./components/MyCounter.vue";
 import MyList from "./components/MyList.vue";
+import axios from "axios";
 export default {
   name: "App",
   components: {
@@ -14,7 +18,8 @@ export default {
   },
   data() {
     return {
-      posts: [{ id: 1, title: "title", body: "body" }],
+      posts: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -27,8 +32,20 @@ export default {
       });
     },
     async getPosts() {
-      f
-    }
+      try {
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts?_limit=5"
+        );
+        this.posts = response.data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
+  mounted() {
+    this.getPosts();
   },
 };
 </script>
@@ -39,6 +56,12 @@ export default {
   padding: 0;
   box-sizing: border-box;
   color: rgb(46, 46, 46);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h2 {

@@ -4,7 +4,9 @@
     <h4>{{ post.title }}</h4>
     <p>{{ post.body }}</p>
     <div>
-      <my-button @click="$emit('removePost', post)">Remove</my-button>
+      <my-button class="button" @click="$emit('removePost', post)"
+        >Remove</my-button
+      >
     </div>
   </li>
 </template>
@@ -29,7 +31,7 @@ export default {
 <style scoped>
 li {
   width: 100%;
-  min-width: 250px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +39,6 @@ li {
   border: 1px solid green;
   padding: 10px;
   border-radius: 10px;
-  margin-bottom: 10px;  
+  margin-bottom: 10px;
 }
 </style>
