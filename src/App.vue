@@ -18,6 +18,19 @@
       ></my-select
     ></my-list>
     <h2 v-if="isLoading">Loading...</h2>
+    <ul class="pagination">
+      <li
+        class="pagination__item"
+        v-for="pageNumber in totalPages"
+        :key="pageNumber"
+        :class="{
+          'pagination__item--actual': page === pageNumber,
+        }"
+        @click="changePage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </li>
+    </ul>
   </main>
 </template>
 
@@ -41,32 +54,38 @@ export default {
       ],
       selectedValue: "",
       inputValue: "",
+      page: 1,
+      limit: 4,
+      totalPages: 0,
     };
   },
   methods: {
     createPost(post) {
       this.posts.push(post);
     },
-    searchInput(value) {
-      this.posts = this.posts.filter((item) => {
-        return (
-          item.title.includes(value) ||
-          item.body.includes(value) ||
-          item.id.toString().includes(value)
-        );
-      });
-    },
     deleteItem(post) {
       this.posts = this.posts.filter((item) => {
         return item.id !== post.id;
       });
     },
+    changePage(pageNumber) {
+      this.page = pageNumber;
+    },
     async getPosts() {
       try {
         const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts?_limit=5"
+          "https://jsonplaceholder.typicode.com/posts",
+          {
+            params: {
+              _page: this.page,
+              _limit: this.limit,
+            },
+          }
         );
         this.posts = response.data;
+        this.totalPages = Math.ceil(
+          response.headers["x-total-count"] / this.limit
+        );
       } catch (error) {
         console.log(error);
       } finally {
@@ -87,7 +106,7 @@ export default {
     },
     sortedFilteredPosts() {
       return this.sortedPosts.filter((post) =>
-        post.title.includes(this.inputValue)
+        post.title.toLowerCase().includes(this.inputValue.toLowerCase())
       );
     },
   },
@@ -98,6 +117,9 @@ export default {
           .toString()
           .localeCompare(post2[newValue].toString());
       });
+    },
+    page() {
+      this.getPosts();
     },
   },
 };
@@ -120,5 +142,27 @@ main {
 h2 {
   text-decoration: underline;
   margin-bottom: 10px;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  width: 400px;
+  justify-content: space-between;
+  list-style-type: none;
+}
+
+.pagination__item {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid gray;
+  cursor: pointer;
+}
+
+.pagination__item--actual {
+  background-color: rgb(183, 164, 150);
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid gray;
 }
 </style>
