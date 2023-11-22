@@ -30,5 +30,8 @@ export default {
 <style scoped>
 select {
   margin-bottom: 10px;
+  padding: 5px;
+  min-width: 200px;
+  cursor: pointer;
 }
 </style>

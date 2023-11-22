@@ -2,12 +2,21 @@
   <main>
     <my-counter title="My counter" />
     <my-list
-      :posts="posts"
+      :posts="sortedFilteredPosts"
       @createPost="createPost"
       @removePost="deleteItem"
-      v-model:selectedValue="selectedValue"
       :options="options"
-    />
+    >
+      <my-input
+        v-model:modelValue="inputValue"
+        type="text"
+        placeholder="search by title" />
+
+      <my-select
+        v-model:selectedValue="selectedValue"
+        :options="options"
+      ></my-select
+    ></my-list>
     <h2 v-if="isLoading">Loading...</h2>
   </main>
 </template>
@@ -31,11 +40,21 @@ export default {
         { name: "title", value: "title" },
       ],
       selectedValue: "",
+      inputValue: "",
     };
   },
   methods: {
     createPost(post) {
       this.posts.push(post);
+    },
+    searchInput(value) {
+      this.posts = this.posts.filter((item) => {
+        return (
+          item.title.includes(value) ||
+          item.body.includes(value) ||
+          item.id.toString().includes(value)
+        );
+      });
     },
     deleteItem(post) {
       this.posts = this.posts.filter((item) => {
@@ -57,6 +76,20 @@ export default {
   },
   mounted() {
     this.getPosts();
+  },
+  computed: {
+    sortedPosts() {
+      return [...this.posts].sort((post1, post2) =>
+        post1[this.selectedValue]
+          ?.toString()
+          .localeCompare(post2[this.selectedValue].toString())
+      );
+    },
+    sortedFilteredPosts() {
+      return this.sortedPosts.filter((post) =>
+        post.title.includes(this.inputValue)
+      );
+    },
   },
   watch: {
     selectedValue(newValue) {

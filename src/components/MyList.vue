@@ -2,11 +2,8 @@
   <section>
     <h2>My list</h2>
     <my-button @click="this.show = true">Add new Post</my-button>
-    <my-select
-      :selectedValue="selectedValue"
-      :options="options"
-      @change="changeOption"
-    ></my-select>
+    <slot></slot>
+
     <my-modal v-model:show="show">
       <h2>Form new post</h2>
       <form @submit.prevent>
@@ -16,12 +13,14 @@
       </form>
     </my-modal>
     <ul v-if="posts.length > 0">
-      <my-item
-        v-for="post in posts"
-        :key="post.id"
-        :post="post"
-        @removePost="$emit('removePost', post)"
-      />
+      <transition-group name="post-list">
+        <my-item
+          v-for="post in posts"
+          :key="post.id"
+          :post="post"
+          @removePost="$emit('removePost', post)"
+        />
+      </transition-group>
     </ul>
     <h2 v-else style="color: red">List is empty</h2>
   </section>
@@ -37,9 +36,6 @@ export default {
     posts: {
       type: Array,
       required: true,
-    },
-    selectedValue: {
-      type: String,
     },
     options: {
       type: Array,
@@ -65,9 +61,6 @@ export default {
       this.show = !this.show;
       this.post.title = "";
       this.post.body = "";
-    },
-    changeOption(evt) {
-      this.$emit("update:selectedValue", evt.target.value);
     },
   },
   watch: {
@@ -108,5 +101,14 @@ ul {
 
 button {
   margin-bottom: 30px;
+}
+.post-list-enter-active,
+.post-list-leave-active {
+  transition: all 0.5s ease;
+}
+.post-list-enter-from,
+.post-list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
