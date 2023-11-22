@@ -1,16 +1,18 @@
 <template>
-  <div class="app">
-    <nav-bar></nav-bar>
-    <router-view></router-view>
-  </div>
+  <main>
+    <my-counter title="My counter" />
+  </main>
 </template>
 
 <script>
-import NavBar from "@/components/MyNavBar";
+import MyCounter from "@/components/MyCounter.vue";
 export default {
-  name: "App",
+  name: "counterPage",
   components: {
-    NavBar,
+    MyCounter,
+  },
+  data() {
+    return {};
   },
 };
 </script>

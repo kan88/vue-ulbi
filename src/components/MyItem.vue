@@ -4,6 +4,11 @@
     <h4>{{ post.title }}</h4>
     <p>{{ post.body }}</p>
     <div>
+      <my-button
+        class="button button--open"
+        @click="$router.push(`/posts/${post.id}`, post)"
+        >Open</my-button
+      >
       <my-button class="button" @click="$emit('removePost', post)"
         >Remove</my-button
       >
@@ -45,5 +50,14 @@ li {
 p {
   margin-bottom: 5px;
   flex: 1;
+}
+div {
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+}
+
+.button--open {
+  background-color: aquamarine;
 }
 </style>
