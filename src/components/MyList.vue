@@ -2,6 +2,11 @@
   <section>
     <h2>My list</h2>
     <my-button @click="this.show = true">Add new Post</my-button>
+    <my-select
+      :selectedValue="selectedValue"
+      :options="options"
+      @change="changeOption"
+    ></my-select>
     <my-modal v-model:show="show">
       <h2>Form new post</h2>
       <form @submit.prevent>
@@ -33,6 +38,13 @@ export default {
       type: Array,
       required: true,
     },
+    selectedValue: {
+      type: String,
+    },
+    options: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -53,6 +65,17 @@ export default {
       this.show = !this.show;
       this.post.title = "";
       this.post.body = "";
+    },
+    changeOption(evt) {
+      this.$emit("update:selectedValue", evt.target.value);
+    },
+  },
+  watch: {
+    post: {
+      handler(newValue) {
+        console.log(newValue);
+      },
+      deep: true,
     },
   },
 };

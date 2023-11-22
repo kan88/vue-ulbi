@@ -41,4 +41,9 @@ li {
   border-radius: 10px;
   margin-bottom: 10px;
 }
+
+p {
+  margin-bottom: 5px;
+  flex: 1;
+}
 </style>

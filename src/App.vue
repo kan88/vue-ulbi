@@ -1,7 +1,13 @@
 <template>
   <main>
     <my-counter title="My counter" />
-    <my-list :posts="posts" @createPost="createPost" @removePost="deleteItem" />
+    <my-list
+      :posts="posts"
+      @createPost="createPost"
+      @removePost="deleteItem"
+      v-model:selectedValue="selectedValue"
+      :options="options"
+    />
     <h2 v-if="isLoading">Loading...</h2>
   </main>
 </template>
@@ -20,6 +26,11 @@ export default {
     return {
       posts: [],
       isLoading: true,
+      options: [
+        { name: "id", value: "id" },
+        { name: "title", value: "title" },
+      ],
+      selectedValue: "",
     };
   },
   methods: {
@@ -46,6 +57,15 @@ export default {
   },
   mounted() {
     this.getPosts();
+  },
+  watch: {
+    selectedValue(newValue) {
+      this.posts = this.posts.sort((post1, post2) => {
+        return post1[newValue]
+          .toString()
+          .localeCompare(post2[newValue].toString());
+      });
+    },
   },
 };
 </script>
