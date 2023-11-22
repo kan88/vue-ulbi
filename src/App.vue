@@ -18,19 +18,7 @@
       ></my-select
     ></my-list>
     <h2 v-if="isLoading">Loading...</h2>
-    <ul class="pagination">
-      <li
-        class="pagination__item"
-        v-for="pageNumber in totalPages"
-        :key="pageNumber"
-        :class="{
-          'pagination__item--actual': page === pageNumber,
-        }"
-        @click="changePage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </li>
-    </ul>
+    <div ref="observer" class="observer"></div>
   </main>
 </template>
 
@@ -68,11 +56,10 @@ export default {
         return item.id !== post.id;
       });
     },
-    changePage(pageNumber) {
-      this.page = pageNumber;
-    },
     async getPosts() {
       try {
+        console.log("mounted");
+
         const response = await axios.get(
           "https://jsonplaceholder.typicode.com/posts",
           {
@@ -82,10 +69,11 @@ export default {
             },
           }
         );
-        this.posts = response.data;
+        this.posts = [...this.posts, ...response.data];
         this.totalPages = Math.ceil(
           response.headers["x-total-count"] / this.limit
         );
+        this.page++;
       } catch (error) {
         console.log(error);
       } finally {
@@ -95,6 +83,21 @@ export default {
   },
   mounted() {
     this.getPosts();
+
+    let options = {
+      root: document.querySelector("#scrollArea"),
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+
+    const callback = (entries) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.getPosts();
+      }
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPosts() {
@@ -117,9 +120,6 @@ export default {
           .toString()
           .localeCompare(post2[newValue].toString());
       });
-    },
-    page() {
-      this.getPosts();
     },
   },
 };
@@ -164,5 +164,11 @@ h2 {
   padding: 10px 15px;
   border-radius: 5px;
   border: 1px solid gray;
+}
+
+.observer {
+  background-color: red;
+  width: 30px;
+  height: 30px;
 }
 </style>
