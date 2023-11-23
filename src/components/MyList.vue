@@ -7,7 +7,12 @@
     <my-modal v-model:show="show">
       <h2>Form new post</h2>
       <form @submit.prevent>
-        <my-input v-model.trim="post.title" type="text" placeholder="title" />
+        <my-input
+          v-focus
+          v-model.trim="post.title"
+          type="text"
+          placeholder="title"
+        />
         <my-input v-model.trim="post.body" type="text" placeholder="body" />
         <my-button @click="addPost">New Post</my-button>
       </form>

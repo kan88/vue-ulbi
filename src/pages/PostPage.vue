@@ -7,6 +7,7 @@
       :options="options"
     >
       <my-input
+        v-focus
         v-model:modelValue="inputValue"
         type="text"
         placeholder="search by title" />
@@ -17,7 +18,7 @@
       ></my-select
     ></my-list>
     <h2 v-if="isLoading">Loading...</h2>
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="getPosts" class="observer"></div>
   </main>
 </template>
 
@@ -80,21 +81,6 @@ export default {
   },
   mounted() {
     this.getPosts();
-
-    let options = {
-      root: document.querySelector("#scrollArea"),
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-
-    const callback = (entries) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        this.getPosts();
-      }
-    };
-
-    let observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer);
   },
   computed: {
     sortedPosts() {
