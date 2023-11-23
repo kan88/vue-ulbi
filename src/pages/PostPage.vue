@@ -1,19 +1,16 @@
 <template>
   <main>
-    <my-list
-      :posts="sortedFilteredPosts"
-      @createPost="createPost"
-      @removePost="deleteItem"
-      :options="options"
-    >
+    <my-list :posts="sortedFilteredPosts" :options="options">
       <my-input
         v-focus
-        v-model:modelValue="inputValue"
+        :model-value="inputValue"
+        @update:model-value="setInput"
         type="text"
         placeholder="search by title" />
 
       <my-select
-        v-model:selectedValue="selectedValue"
+        :model-value:selectedValue="selectedValue"
+        @update:model-value="setSelect"
         :options="options"
       ></my-select
     ></my-list>
@@ -24,86 +21,34 @@
 
 <script>
 import MyList from "@/components/MyList.vue";
-import axios from "axios";
+import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
   components: {
     MyList,
   },
   data() {
-    return {
-      posts: [],
-      isLoading: true,
-      options: [
-        { name: "id", value: "id" },
-        { name: "title", value: "title" },
-      ],
-      selectedValue: "",
-      inputValue: "",
-      page: 1,
-      limit: 4,
-      totalPages: 0,
-    };
+    return {};
   },
   methods: {
-    createPost(post) {
-      this.posts.push(post);
-    },
-    deleteItem(post) {
-      this.posts = this.posts.filter((item) => {
-        return item.id !== post.id;
-      });
-    },
-    async getPosts() {
-      try {
-        console.log("mounted");
-
-        const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts",
-          {
-            params: {
-              _page: this.page,
-              _limit: this.limit,
-            },
-          }
-        );
-        this.posts = [...this.posts, ...response.data];
-        this.totalPages = Math.ceil(
-          response.headers["x-total-count"] / this.limit
-        );
-        this.page++;
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.isLoading = false;
-      }
-    },
+    ...mapActions({ getPosts: "getPosts" }),
+    ...mapMutations({
+      setInput: "setInput",
+      setSelect: "setSelect",
+      createPost: "posts/createPost",
+    }),
   },
   mounted() {
     this.getPosts();
   },
   computed: {
-    sortedPosts() {
-      return [...this.posts].sort((post1, post2) =>
-        post1[this.selectedValue]
-          ?.toString()
-          .localeCompare(post2[this.selectedValue].toString())
-      );
-    },
-    sortedFilteredPosts() {
-      return this.sortedPosts.filter((post) =>
-        post.title.toLowerCase().includes(this.inputValue.toLowerCase())
-      );
-    },
-  },
-  watch: {
-    selectedValue(newValue) {
-      this.posts = this.posts.sort((post1, post2) => {
-        return post1[newValue]
-          .toString()
-          .localeCompare(post2[newValue].toString());
-      });
-    },
+    ...mapState({
+      options: (state) => state.posts.options,
+      isLoading: (state) => state.posts.isLoading,
+      selectedValue: (state) => state.posts.selectedValue,
+      inputValue: (state) => state.posts.inputValue,
+    }),
+    ...mapGetters({ sortedFilteredPosts: "sortedFilteredPosts" }),
   },
 };
 </script>

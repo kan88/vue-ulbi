@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <h1>{{ $store.state.title }}</h1>
     <nav-bar></nav-bar>
     <router-view></router-view>
   </div>

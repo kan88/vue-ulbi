@@ -21,9 +21,9 @@
       <transition-group name="post-list">
         <my-item
           v-for="post in posts"
-          :key="post.id"
+          :key="post.title"
           :post="post"
-          @removePost="$emit('removePost', post)"
+          @click="removePost(post)"
         />
       </transition-group>
     </ul>
@@ -33,6 +33,7 @@
 
 <script>
 import MyItem from "./MyItem.vue";
+import { mapMutations } from "vuex";
 
 export default {
   name: "MyList",
@@ -57,8 +58,12 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      removePost: "deleteItem",
+      createPost: "createPost",
+    }),
     addPost() {
-      this.$emit("createPost", {
+      this.createPost({
         id: Date.now(),
         body: this.post.body,
         title: this.post.title,

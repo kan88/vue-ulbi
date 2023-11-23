@@ -1,10 +1,10 @@
 <template>
   <section>
-    <h2>{{ title }}</h2>
-    <h3>Amount likes:{{ likes }}</h3>
-    <h3>Amount dislikes:{{ dislikes }}</h3>
-    <my-button @click="addLike">Like</my-button>
-    <my-button @click="addDislike">DisLike</my-button>
+    <h2>{{ $store.getters.getTitleDate }}</h2>
+    <h3>Amount likes:{{ $store.state.likes.likes }}</h3>
+    <h3>Amount dislikes:{{ $store.state.likes.dislikes }}</h3>
+    <my-button @click="$store.commit('incrementLikes')">Like</my-button>
+    <my-button @click="$store.commit('decrementLikes')">DisLike</my-button>
   </section>
 </template>
 
@@ -14,20 +14,8 @@ export default {
   props: {
     title: String,
   },
-  data() {
-    return {
-      likes: 0,
-      dislikes: 0,
-    };
-  },
-  methods: {
-    addLike() {
-      this.likes += 1;
-    },
-    addDislike() {
-      this.dislikes += 1;
-    },
-  },
+  data() {},
+  methods: {},
 };
 </script>
 
