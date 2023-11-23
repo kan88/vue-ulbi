@@ -7,8 +7,11 @@
 </template>
 
 <script>
+import toggleMixin from "@/mixins/toggleMixin";
+
 export default {
   name: "myModal",
+  mixins: [toggleMixin],
   props: {
     show: {
       type: Boolean,
