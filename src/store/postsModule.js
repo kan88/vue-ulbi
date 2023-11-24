@@ -48,7 +48,7 @@ export const postsModule = {
       state.limit = value;
     },
     setPage(state, value) {
-      state.page = value;
+      state.page = state.page + value;
     },
     setTotalPages(state, value) {
       state.totalPages = value;
@@ -87,7 +87,7 @@ export const postsModule = {
           "setTotalPages",
           Math.ceil(response.headers["x-total-count"] / state.limit)
         );
-        commit("setPage", state.page++);
+        commit("setPage", 1);
       } catch (error) {
         console.log(error);
       } finally {

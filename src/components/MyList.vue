@@ -73,14 +73,14 @@ export default {
       this.post.body = "";
     },
   },
-  watch: {
-    post: {
-      handler(newValue) {
-        console.log(newValue);
-      },
-      deep: true,
-    },
-  },
+  // watch: {
+  //   post: {
+  //     handler(newValue) {
+  //       console.log(newValue);
+  //     },
+  //     deep: true,
+  //   },
+  // },
 };
 </script>
 

@@ -15,7 +15,11 @@
       ></my-select
     ></my-list>
     <h2 v-if="isLoading">Loading...</h2>
-    <div v-intersection="getPosts" class="observer"></div>
+    <div
+      v-if="page != 0 && page < totalPages"
+      v-intersection="getPosts"
+      class="observer"
+    ></div>
   </main>
 </template>
 
@@ -39,6 +43,7 @@ export default {
     }),
   },
   mounted() {
+    console.log("mounted");
     this.getPosts();
   },
   computed: {
@@ -47,6 +52,8 @@ export default {
       isLoading: (state) => state.posts.isLoading,
       selectedValue: (state) => state.posts.selectedValue,
       inputValue: (state) => state.posts.inputValue,
+      page: (state) => state.posts.page,
+      totalPages: (state) => state.posts.totalPages,
     }),
     ...mapGetters({ sortedFilteredPosts: "sortedFilteredPosts" }),
   },
